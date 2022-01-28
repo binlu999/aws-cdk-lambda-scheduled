@@ -18,5 +18,30 @@ export class CdkStarterStack extends cdk.Stack {
         externalModules: ['aws-sdk'],
       },
     });
-  }
+
+    const rdsStartJob = new NodejsFunction(this,'rds-start-job-function',{
+      memorySize:1024,
+      timeout:cdk.Duration.seconds(60),
+      runtime:lambda.Runtime.NODEJS_14_X,
+      handler:"handler",
+      entry:path.join(__dirname,`/../src/start-up/app.ts`),
+      bundling:{
+        minify:true,
+        externalModules:['aws-sdk']
+      }
+    });
+
+    const rdsStopJob = new NodejsFunction(this,'rds-stop-job-function',{
+      memorySize:1024,
+      timeout:cdk.Duration.seconds(60),
+      runtime:lambda.Runtime.NODEJS_14_X,
+      handler:"handler",
+      entry:path.join(__dirname,`/../src/shut-down/app.ts`),
+      bundling:{
+        minify:true,
+        externalModules:['aws-sdk']
+    }
+  });
+
+  };
 }
